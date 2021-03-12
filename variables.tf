@@ -2,9 +2,14 @@ variable "name" {
   type = string
 }
 variable "file" {
-  type = string
+  type    = string
+  default = null
 }
 variable "file_hash" {
+  type    = string
+  default = null
+}
+variable "image" {
   type    = string
   default = null
 }
@@ -69,4 +74,23 @@ variable "assume_role_identifiers" {
 variable "publish" {
   type    = bool
   default = false
+}
+variable "description" {
+  type    = string
+  default = null
+}
+variable "efs" {
+  type = list(object({
+    arn   = string
+    mount = string
+  }))
+  default = []
+}
+variable "reserved" {
+  type    = number
+  default = null
+}
+variable "tracing_mode" {
+  type    = string
+  default = null
 }

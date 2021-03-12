@@ -1,7 +1,8 @@
 resource "aws_lambda_function" "lambda" {
   count            = var.enabled ? 1 : 0
   filename         = var.file
-  source_code_hash = (null == var.file_hash) ? filebase64sha256(var.file) : var.file_hash
+  source_code_hash = (null != var.file) ? ((null == var.file_hash) ? filebase64sha256(var.file) : var.file_hash) : null
+  image_uri        = ((null == var.file) && (null != var.image)) ? var.image : var.file
   function_name    = var.name
   role             = aws_iam_role.lambda[0].arn
   handler          = var.handler
@@ -12,6 +13,9 @@ resource "aws_lambda_function" "lambda" {
   tags             = var.tags
   layers           = var.layers
   publish          = var.publish
+  description      = var.description
+  package_type     = (null != var.image) ? "Image" : "Zip"
+  reserved_concurrent_executions = var.reserved
 
   dynamic "dead_letter_config" {
     iterator = v
@@ -33,6 +37,21 @@ resource "aws_lambda_function" "lambda" {
     content {
         subnet_ids         = lookup(v.value, "subnet_ids")
         security_group_ids = lookup(v.value, "security_group_ids")
+    }
+  }
+  dynamic "file_system_config" {
+    iterator = v
+    for_each = var.efs
+    content {
+        arn              = lookup(v.value, "arn")
+        local_mount_path = lookup(v.value, "mount")
+    }
+  }
+  dynamic "tracing_config" {
+    iterator = v
+    for_each = (null != var.tracing_mode) ? {x: {mode = var.tracing_mode}} : {}
+    content {
+        mode = lookup(v.value, "mode")
     }
   }
 }
