@@ -2,11 +2,11 @@ resource "aws_lambda_function" "lambda" {
   count            = var.enabled ? 1 : 0
   filename         = var.file
   source_code_hash = (null != var.file) ? ((null == var.file_hash) ? filebase64sha256(var.file) : var.file_hash) : null
-  image_uri        = ((null == var.file) && (null != var.image)) ? var.image : var.file
+  image_uri        = local.is_image ? var.image : var.file
   function_name    = var.name
   role             = aws_iam_role.lambda[0].arn
-  handler          = var.handler
-  runtime          = var.runtime
+  handler          = local.is_image ? null : var.handler
+  runtime          = local.is_image ? null : var.runtime
   timeout          = var.timeout
   memory_size      = var.memory_size
   depends_on       = [module.lambda-policy, aws_cloudwatch_log_group.lambda[0]]
