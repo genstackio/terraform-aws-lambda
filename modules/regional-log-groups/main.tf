@@ -166,7 +166,7 @@ module "log-group-eu-west-2" {
 module "log-group-eu-west-3" {
   source    = "../log-group"
   enabled   = local.lg_eu-west-3
-  name      = "us-east-1.${var.name}"
+  name      = "eu-west-3.${var.name}"
   retention = var.retention
   providers = { aws = aws.eu-west-3 }
 }
