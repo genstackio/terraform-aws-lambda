@@ -63,6 +63,19 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
+resource aws_s3_bucket_object "package-zip" {
+  count  = local.is_s3 ? 1 : 0
+  bucket = var.s3_bucket
+  key    = var.s3_key
+  source = "${path.module}/default-packages/${var.runtime}.zip"
+  etag   = filemd5("${path.module}/default-packages/${var.runtime}.zip")
+  lifecycle {
+    ignore_changes = [
+      etag, source_hash
+    ]
+  }
+}
+
 data "aws_iam_policy_document" "lambda-assume-role" {
   statement {
     actions = ["sts:AssumeRole"]
