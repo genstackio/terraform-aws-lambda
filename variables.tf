@@ -9,13 +9,29 @@ variable "file_hash" {
   type    = string
   default = null
 }
+variable "check_file_hash" {
+  type    = bool
+  default = true
+}
 variable "image" {
+  type    = string
+  default = null
+}
+variable "s3_bucket" {
+  type    = string
+  default = null
+}
+variable "s3_key" {
+  type    = string
+  default = null
+}
+variable "s3_object_version" {
   type    = string
   default = null
 }
 variable "runtime" {
   type    = string
-  default = "nodejs12.x"
+  default = "nodejs14.x"
 }
 variable "timeout" {
   type    = number
