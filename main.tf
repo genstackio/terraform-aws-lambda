@@ -63,7 +63,7 @@ resource "aws_lambda_function" "lambda" {
   }
 }
 
-resource aws_s3_bucket_object "package-zip" {
+resource aws_s3_object "package-zip" {
   count  = local.is_s3 ? 1 : 0
   bucket = var.s3_bucket
   key    = var.s3_key
