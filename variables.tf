@@ -31,7 +31,7 @@ variable "s3_object_version" {
 }
 variable "runtime" {
   type    = string
-  default = "nodejs14.x"
+  default = "nodejs16.x"
 }
 variable "timeout" {
   type    = number
