@@ -5,7 +5,7 @@ resource "aws_lambda_function" "lambda" {
   //noinspection ConflictingProperties
   s3_bucket = local.is_s3 ? var.s3_bucket : null
   //noinspection ConflictingProperties
-  s3_key = local.is_s3 ? var.s3_key : null
+  s3_key = local.is_s3 ? local.real_s3_key : null
   //noinspection ConflictingProperties
   s3_object_version              = local.is_s3 ? var.s3_object_version : null
   source_code_hash               = (null != var.file) ? ((null == var.file_hash) ? ((true == var.check_file_hash) ? filebase64sha256(var.file) : null) : var.file_hash) : null
@@ -64,9 +64,9 @@ resource "aws_lambda_function" "lambda" {
 }
 
 resource "aws_s3_object" "package-zip" {
-  count  = local.is_s3 ? 1 : 0
+  count  = local.is_managed_s3 ? 1 : 0
   bucket = var.s3_bucket
-  key    = var.s3_key
+  key    = local.real_s3_key
   source = "${path.module}/default-packages/${var.runtime}.zip"
   etag   = filemd5("${path.module}/default-packages/${var.runtime}.zip")
   lifecycle {
