@@ -9,6 +9,10 @@ variable "file_hash" {
   type    = string
   default = null
 }
+variable "architectures" {
+  type    = string
+  default = "arm64"
+}
 variable "check_file_hash" {
   type    = bool
   default = true

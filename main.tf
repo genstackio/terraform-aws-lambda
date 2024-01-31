@@ -2,6 +2,7 @@ resource "aws_lambda_function" "lambda" {
   count = var.enabled ? 1 : 0
   //noinspection ConflictingProperties
   filename = var.file
+  architectures = [var.architectures]
   //noinspection ConflictingProperties
   s3_bucket = local.is_s3 ? var.s3_bucket : null
   //noinspection ConflictingProperties
