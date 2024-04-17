@@ -11,7 +11,7 @@ variable "file_hash" {
 }
 variable "architectures" {
   type    = string
-  default = "arm64"
+  default = "x86_64"
 }
 variable "check_file_hash" {
   type    = bool
