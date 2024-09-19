@@ -80,8 +80,8 @@ resource "aws_s3_object" "package-zip" {
 //noinspection ConflictingProperties
 resource "aws_iam_role" "lambda" {
   count              = var.enabled ? 1 : 0
-  name               = (64 < length("lambda-${var.name}-role")) ? null : "lambda-${var.name}-role"
-  name_prefix        = (64 >= length("lambda-${var.name}-role")) ? null : "lambda-role-"
+  name               = (64 < length("lambda-${null != var.unique_name ? var.unique_name : var.name}-role")) ? null : "lambda-${null != var.unique_name ? var.unique_name : var.name}-role"
+  name_prefix        = (64 >= length("lambda-${null != var.unique_name ? var.unique_name : var.name}-role")) ? null : "lambda-${null != var.unique_name ? var.unique_name : var.name}-role-"
   assume_role_policy = data.aws_iam_policy_document.lambda-assume-role.json
 }
 
@@ -94,8 +94,8 @@ resource "aws_cloudwatch_log_group" "lambda" {
 module "lambda-policy" {
   source      = "./modules/policy"
   enabled     = var.enabled
-  name        = var.name
-  policy_name = "lambda-${var.name}"
+  name        = null != var.unique_name ? var.unique_name : var.name
+  policy_name = "lambda-${null != var.unique_name ? var.unique_name : var.name}"
   role_name   = (var.enabled && 0 < length(aws_iam_role.lambda)) ? aws_iam_role.lambda[0].name : null
   statements = concat(
     [

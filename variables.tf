@@ -1,6 +1,10 @@
 variable "name" {
   type = string
 }
+variable "unique_name" {
+  type    = string
+  default = null
+}
 variable "file" {
   type    = string
   default = null
