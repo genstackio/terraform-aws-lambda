@@ -126,6 +126,16 @@ module "lambda-policy" {
         resources = ["*"]
         effect    = "Allow"
       }
+    ] : [],
+    "Active" == var.tracing_mode ? [
+      {
+        actions = [
+          "xray:PutTraceSegments",
+          "xray:PutTelemetryRecords"
+        ]
+        resources = ["*"]
+        effect    = "Allow"
+      }
     ] : []
   )
 }
