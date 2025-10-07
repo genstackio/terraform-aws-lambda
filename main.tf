@@ -98,13 +98,13 @@ module "lambda-policy" {
   policy_name = "lambda-${null != var.unique_name ? var.unique_name : var.name}"
   role_name   = (var.enabled && 0 < length(aws_iam_role.lambda)) ? aws_iam_role.lambda[0].name : null
   statements = concat(
-    [
+    var.enabled ? [
       {
         actions   = ["logs:CreateLogStream", "logs:PutLogEvents"],
-        resources = ["arn:aws:logs:*:*:*"],
+        resources = ["${aws_cloudwatch_log_group.lambda[0].arn}:*"],
         effect    = "Allow"
       },
-    ],
+    ] : [],
     var.policy_statements,
     ("" != var.dlq_sns_topic) ? [
       {
